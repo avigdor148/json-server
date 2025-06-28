@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #addBtn {
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #addBtn:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+   <table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>title</th>
+            <th>author</th>
+            <th>body</th>
+    </thead>
+    <tbody id="dataList">
+        <!-- Data will be populated here -->
+    </tbody>
+   </table>
+
+   <button id="addBtn" onclick="addData()">add data</button> 
+   id: <input type="text" id="id" placeholder="Enter ID">
+   
+   <script>
+
+
+    function addData(){
+        const id = document.getElementById('id').value;
+
+        fetch(`http://localhost:3000/posts/${id}`)
+        .then(response => response.json())
+        .then(posts =>{
+            console.log(posts);
+            
+            const tableData = document.getElementById('dataList');
+            tableData.innerHTML = ''; // Clear existing data
+            
+            if(posts == null){
+                return;
+            }
+
+            if (!Array.isArray(posts)) {
+                posts = [posts];
+            }
+            posts.forEach(post => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${post.id}</td>
+                    <td>${post.title}</td>
+                    <td>${post.author}</td>
+                    <td>${post.body}</td>
+                `;
+                tableData.appendChild(row);
+            })
+
+            
+ 
+        
+        })
+    }
+
+    addData()
+   </script>
+</body>
+</html>
